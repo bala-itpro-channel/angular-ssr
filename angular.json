@@ -17,7 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/ang-ssr",
+            "outputPath": "dist/ang-ssr/browser",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": [
@@ -65,10 +65,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "ang-ssr:build:production"
+              "buildTarget": "ang-ssr:build:production"
             },
             "development": {
-              "browserTarget": "ang-ssr:build:development"
+              "buildTarget": "ang-ssr:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -76,7 +76,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "ang-ssr:build"
+            "buildTarget": "ang-ssr:build"
           }
         },
         "test": {
@@ -97,6 +97,61 @@
             ],
             "scripts": []
           }
+        },
+        "server": {
+          "builder": "@angular-devkit/build-angular:server",
+          "options": {
+            "outputPath": "dist/ang-ssr/server",
+            "main": "server.ts",
+            "tsConfig": "tsconfig.server.json",
+            "inlineStyleLanguage": "scss"
+          },
+          "configurations": {
+            "production": {
+              "outputHashing": "media"
+            },
+            "development": {
+              "buildOptimizer": false,
+              "optimization": false,
+              "sourceMap": true,
+              "extractLicenses": false,
+              "vendorChunk": true
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve-ssr": {
+          "builder": "@angular-devkit/build-angular:ssr-dev-server",
+          "configurations": {
+            "development": {
+              "browserTarget": "ang-ssr:build:development",
+              "serverTarget": "ang-ssr:server:development"
+            },
+            "production": {
+              "browserTarget": "ang-ssr:build:production",
+              "serverTarget": "ang-ssr:server:production"
+            }
+          },
+          "defaultConfiguration": "development"
+        },
+        "prerender": {
+          "builder": "@angular-devkit/build-angular:prerender",
+          "options": {
+            "routes": [
+              "/"
+            ]
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "ang-ssr:build:production",
+              "serverTarget": "ang-ssr:server:production"
+            },
+            "development": {
+              "browserTarget": "ang-ssr:build:development",
+              "serverTarget": "ang-ssr:server:development"
+            }
+          },
+          "defaultConfiguration": "production"
         }
       }
     }
